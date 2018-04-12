@@ -4459,7 +4459,7 @@ openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.24 testport4
 
 # See https://docs.openstack.org/project-install-guide/baremetal/draft/configure-glance-images.html
-wget -O /tmp/setup/OL7.vmdk https://clemson.box.com/shared/static/tgaz4t4poo65kgvv4wat41ekk5jjzu2q.vmdk
+wget -O /tmp/setup/Oracle.vmdk https://clemson.box.com/shared/static/nxwfoeh3iwyf4k5iouq639sdrfshbh99.vmdk
 glance image-create --name OL7 --disk-format vmdk --visibility public --container-format bare < /tmp/setup/OL7.vmdk
 
 project_id=`openstack project list -f value | grep admin | cut -d' ' -f 1`
