@@ -4465,13 +4465,13 @@ image_id=`openstack image list -f value | grep OL7Compute | cut -d' ' -f 1`
 
 
 port_id=`openstack port list -f value | grep computeport1 | cut -d' ' -f 1`
-openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute1 &
+openstack server create --flavor m1.medium --security-group $security_id --image OL7Compute --nic port-id=$port_id compute1 &
 
 port_id=`openstack port list -f value | grep computeport2 | cut -d' ' -f 1`
-openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute2 &
+openstack server create --flavor m1.medium --security-group $security_id --image OL7Compute --nic port-id=$port_id compute2 &
 
 port_id=`openstack port list -f value | grep computeport3 | cut -d' ' -f 1`
-openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute3 &
+openstack server create --flavor m1.medium --security-group $security_id --image OL7Compute --nic port-id=$port_id compute3 &
 
 rm /tmp/setup/OL7Compute.vmdk
 
@@ -4490,11 +4490,11 @@ image_id=`openstack image list -f value | grep OL7Storage | cut -d' ' -f 1`
 
 port_id=`openstack port list -f value | grep storageport1 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image StorageOL7 --nic port-id=$port_id scratch1
+openstack server create --flavor m1.medium --security-group $security_id --image OL7Storage --nic port-id=$port_id scratch1
 
 port_id=`openstack port list -f value | grep storageport2 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image StorageOL7 --nic port-id=$port_id scratch2
+openstack server create --flavor m1.medium --security-group $security_id --image OL7Storage --nic port-id=$port_id scratch2
 
 rm /tmp/setup/OL7Storage.vmdk
 
