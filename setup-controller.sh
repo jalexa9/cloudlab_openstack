@@ -4482,7 +4482,7 @@ echo "Your OpenStack instance is downloading storage image ." \
 #Download Storage Image
 wget -O /tmp/setup/OL7Storage.vmdk https://clemson.box.com/shared/static/xyz2h7g3ttg01j4ns8ey5t6h0spmfwkw.vmdk
 
-glance image-delete $image_id
+#glance image-delete $image_id
 
 glance image-create --name OL7Storage --disk-format vmdk --visibility public --container-format bare < /tmp/setup/OL7Storage.vmdk 
 
