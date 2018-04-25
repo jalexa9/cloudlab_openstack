@@ -4465,7 +4465,7 @@ openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-
 
 #Send notification of download
 echo "Your OpenStack instance is downloading image ." \
-    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL} &
+    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 # See https://docs.openstack.org/project-install-guide/baremetal/draft/configure-glance-images.html
 wget -O /tmp/setup/OL7.vmdk https://clemson.box.com/shared/static/n7il9l5i96lthjzj5pmqq4lwkmaajs2z.vmdk
@@ -4481,13 +4481,13 @@ security_id=`openstack security group list -f value | grep $project_id | cut -d'
 
 port_id=`openstack port list -f value | grep testport1 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image OL7 --nic port-id=$port_id headnode &
+openstack server create --flavor m1.medium --security-group $security_id --image OL7 --nic port-id=$port_id headnode
 #Delete Image after setup to free space
 glance image-delete --name OL7
 
 #Send notification of download
 echo "Your OpenStack instance is downloading image ." \
-    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL} &
+    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 #Download Compute Image
 wget -O /tmp/setup/OL7Compute.vmdk https://clemson.box.com/shared/static/bivyg2j8nxod1eflj0e45q51gig71mv4.vmdk
@@ -4498,20 +4498,20 @@ image_id=`openstack image list -f value | grep OL7Compute | cut -d' ' -f 1`
 
 port_id=`openstack port list -f value | grep testport2 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute1 &
+openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute1
 
 port_id=`openstack port list -f value | grep testport3 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute2 &
+openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute2
 
 port_id=`openstack port list -f value | grep testport4 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute3 &
+openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute3
 glance image-delete --name OL7Compute
 
 #Send notification of download
 echo "Your OpenStack instance is downloading image ." \
-    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL} &
+    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 #Download Storage Image
 wget -O /tmp/setup/OL7Storage.vmdk https://clemson.box.com/shared/static/xyz2h7g3ttg01j4ns8ey5t6h0spmfwkw.vmdk 
@@ -4521,13 +4521,12 @@ image_id=`openstack image list -f value | grep OL7Storage | cut -d' ' -f 1`
 
 port_id=`openstack port list -f value | grep testport5 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image StorageOL7 --nic port-id=$port_id scratch1 &
+openstack server create --flavor m1.medium --security-group $security_id --image StorageOL7 --nic port-id=$port_id scratch1
 
 port_id=`openstack port list -f value | grep testport6 | cut -d' ' -f 1`
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
-openstack server create --flavor m1.medium --security-group $security_id --image StorageOL7 --nic port-id=$port_id scratch2 &
+openstack server create --flavor m1.medium --security-group $security_id --image StorageOL7 --nic port-id=$port_id scratch2
 
-wait
 
 #Add floating Public IP address
 floating_ip=`openstack floating ip create public`
