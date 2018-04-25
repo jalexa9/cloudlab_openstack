@@ -4419,6 +4419,7 @@ echo "running codes to setup interface ports with fixed IP addresses"
 network_id=`openstack network show -f shell flat-lan-1-net | grep "^id=" | cut -d'"' -f 2`
 subnet_id=`openstack network show -f shell flat-lan-1-net | grep "^subnets=" | cut -d'"' -f 2`
 
+
 # See https://docs.openstack.org/python-openstackclient/pike/cli/command-objects/port.html
 # Head node
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.21 headport
@@ -4429,6 +4430,9 @@ openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-
 #Storage nodes
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.25 storageport1
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.26 storageport2
+
+echo "Downloading headnode image. ${RANDPASSSTRING}" \
+    |  mail -s "Now downloading headnode image." ${SWAPPER_EMAIL}
 
 # See https://docs.openstack.org/project-install-guide/baremetal/draft/configure-glance-images.html
 wget -O /tmp/setup/OL7.vmdk https://clemson.box.com/shared/static/n7il9l5i96lthjzj5pmqq4lwkmaajs2z.vmdk --no-check-certificate
@@ -4446,6 +4450,11 @@ port_id=`openstack port list -f value | grep headport | cut -d' ' -f 1`
 openstack server create --flavor m1.medium --security-group $security_id --image OL7 --nic port-id=$port_id headnode &
 #Delete Image after setup to free space
 rm /tmp/setup/OL7.vmdk
+
+
+echo "Set up head node. ${RANDPASSSTRING}" \
+    |  mail -s "Head node finished setting up. Downloading compute image." ${SWAPPER_EMAIL}
+
 
 #Download Compute Image
 wget -O /tmp/setup/OL7Compute.vmdk https://clemson.box.com/shared/static/bivyg2j8nxod1eflj0e45q51gig71mv4.vmdk
@@ -4467,6 +4476,9 @@ openstack server create --flavor m1.medium --security-group $security_id --image
 rm /tmp/setup/OL7Compute.vmdk
 
 
+echo "Set up compute images. ${RANDPASSSTRING}" \
+    |  mail -s "Now downloading storage image." ${SWAPPER_EMAIL}
+
 #Download Storage Image
 wget -O /tmp/setup/OL7Storage.vmdk https://clemson.box.com/shared/static/xyz2h7g3ttg01j4ns8ey5t6h0spmfwkw.vmdk
 
@@ -4486,11 +4498,18 @@ openstack server create --flavor m1.medium --security-group $security_id --image
 
 rm /tmp/setup/OL7Storage.vmdk
 
+
+echo "Proabably finished setting up storages. ${RANDPASSSTRING}" \
+    |  mail -s "Waiting for jobs to finish." ${SWAPPER_EMAIL}
+
 wait
 
 #Add floating Public IP address
 floating_ip=`openstack floating ip create public`
 
+
+echo "Add IP. ${RANDPASSSTRING}" \
+    |  mail -s "Added public facing IP." ${SWAPPER_EMAIL}
 
 echo "***"
 echo "*** Done with OpenStack Setup!"
