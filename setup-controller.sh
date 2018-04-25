@@ -4504,9 +4504,6 @@ echo "Your OpenStack instance is waiting for jobs to finish." \
 
 wait
 
-#Add floating Public IP address
-floating_ip=`openstack floating ip create public`
-
 
 -echo "Your OpenStack instance is adding public ip." \
 -    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
