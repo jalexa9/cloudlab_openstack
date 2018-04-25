@@ -4431,8 +4431,8 @@ openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.25 storageport1
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.26 storageport2
 
-echo "Downloading headnode image. ${RANDPASSSTRING}" \
-    |  mail -s "Now downloading headnode image." ${SWAPPER_EMAIL}
+echo "Your OpenStack instance is downloading headnode image ." \
+    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 # See https://docs.openstack.org/project-install-guide/baremetal/draft/configure-glance-images.html
 wget -O /tmp/setup/OL7.vmdk https://clemson.box.com/shared/static/n7il9l5i96lthjzj5pmqq4lwkmaajs2z.vmdk --no-check-certificate
@@ -4452,8 +4452,8 @@ openstack server create --flavor m1.medium --security-group $security_id --image
 rm /tmp/setup/OL7.vmdk
 
 
-echo "Set up head node. ${RANDPASSSTRING}" \
-    |  mail -s "Head node finished setting up. Downloading compute image." ${SWAPPER_EMAIL}
+echo "Your OpenStack instance is downloading compute image ." \
+    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 
 #Download Compute Image
@@ -4476,8 +4476,8 @@ openstack server create --flavor m1.medium --security-group $security_id --image
 rm /tmp/setup/OL7Compute.vmdk
 
 
-echo "Set up compute images. ${RANDPASSSTRING}" \
-    |  mail -s "Now downloading storage image." ${SWAPPER_EMAIL}
+echo "Your OpenStack instance is downloading storage image ." \
+    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 #Download Storage Image
 wget -O /tmp/setup/OL7Storage.vmdk https://clemson.box.com/shared/static/xyz2h7g3ttg01j4ns8ey5t6h0spmfwkw.vmdk
@@ -4499,8 +4499,8 @@ openstack server create --flavor m1.medium --security-group $security_id --image
 rm /tmp/setup/OL7Storage.vmdk
 
 
-echo "Proabably finished setting up storages. ${RANDPASSSTRING}" \
-    |  mail -s "Waiting for jobs to finish." ${SWAPPER_EMAIL}
+echo "Your OpenStack instance is waiting for jobs to finish." \
+    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 wait
 
@@ -4508,8 +4508,8 @@ wait
 floating_ip=`openstack floating ip create public`
 
 
-echo "Add IP. ${RANDPASSSTRING}" \
-    |  mail -s "Added public facing IP." ${SWAPPER_EMAIL}
+-echo "Your OpenStack instance is adding public ip." \
+-    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 echo "***"
 echo "*** Done with OpenStack Setup!"
