@@ -4484,7 +4484,7 @@ openstack server create --flavor m1.medium --security-group $security_id --image
 
 
 #Add floating Public IP address
-floating_ip=`openstack floating ip create public`
+#floating_ip=`openstack floating ip create public`
 
 
 echo "***"
