@@ -150,9 +150,7 @@ if [ -z "${DB_ROOT_PASS}" ]; then
 # Description:  Waits for an IP address to appear on the mgmt net device.
 ### END INIT INFO
 #
-
 . /lib/lsb/init-functions
-
 case "\${1:-''}" in
     'start')
         while [ 1 -eq 1 ]; do
@@ -175,7 +173,6 @@ case "\${1:-''}" in
         exit 1
         ;;
 esac
-
 exit 0
 EOF
 
@@ -254,14 +251,12 @@ After=network.target network-online.target local-fs.target
 Wants=network.target
 Before=rabbitmq-server.service
 Requires=rabbitmq-server.service
-
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/etc/init.d/legacy-openvpn-net-waiter start
 StandardOutput=journal+console
 StandardError=journal+console
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -395,7 +390,6 @@ if [ -z "${KEYSTONE_DBPASS}" ]; then
 	cat <<EOF >/etc/apache2/sites-available/wsgi-keystone.conf
 Listen 5000
 Listen 35357
-
 <VirtualHost *:5000>
     WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-public
@@ -409,7 +403,6 @@ Listen 35357
     ErrorLog /var/log/apache2/keystone-error.log
     CustomLog /var/log/apache2/keystone-access.log combined
 </VirtualHost>
-
 <VirtualHost *:35357>
     WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-admin
@@ -442,7 +435,6 @@ EOF
 	cat <<EOF >/etc/apache2/sites-available/wsgi-keystone.conf
 Listen 5000
 Listen 35357
-
 <VirtualHost *:5000>
     WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-public
@@ -454,7 +446,6 @@ Listen 35357
     </IfVersion>
     ErrorLog /var/log/apache2/keystone.log
     CustomLog /var/log/apache2/keystone_access.log combined
-
     <Directory /usr/bin>
         <IfVersion >= 2.4>
             Require all granted
@@ -465,7 +456,6 @@ Listen 35357
         </IfVersion>
     </Directory>
 </VirtualHost>
-
 <VirtualHost *:35357>
     WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-admin
@@ -477,7 +467,6 @@ Listen 35357
     </IfVersion>
     ErrorLog /var/log/apache2/keystone.log
     CustomLog /var/log/apache2/keystone_access.log combined
-
     <Directory /usr/bin>
         <IfVersion >= 2.4>
             Require all granted
@@ -3050,7 +3039,6 @@ EOF
     if [ $CEILOMETER_USE_WSGI -eq 1 -a $USING_GNOCCHI -eq 0 ]; then
 	cat <<EOF > /etc/apache2/sites-available/ceilometer-api.conf
 Listen 8777
-
 <VirtualHost *:8777>
     WSGIDaemonProcess ceilometer-api processes=2 threads=10 user=ceilometer display-name=%{GROUP}
     WSGIProcessGroup ceilometer-api
@@ -3093,7 +3081,6 @@ EOF
 	if [ ! $? -eq 0 -a -f /etc/apache2/sites-available/gnocchi-api.conf -a -f /usr/lib/python2.7/dist-packages/gnocchi/rest/app.wsgi ]; then
 	    cat <<EOF >/etc/apache2/sites-available/gnocchi-api.conf
 Listen 8041
-
 <VirtualHost *:8041>
     WSGIDaemonProcess gnocchi-api processes=2 threads=10 user=gnocchi display-name=%{GROUP}
     WSGIProcessGroup gnocchi-api
@@ -3208,13 +3195,11 @@ if [ $OSVERSION -ge $OSPIKE -a -z "${TELEMETRY_GRAFANA_DONE}" ]; then
 Description=Grafana Gnocchi OpenStack Datasource Token Renewer
 After=grafana.service
 #DefaultDependencies=no
-
 [Service]
 Type=simple
 RemainAfterExit=no
 Restart=always
 ExecStart=/bin/sh -c '. /root/setup/admin-openrc.sh ; SLOP=900 ; TOKEXP=`crudini --get /etc/keystone/keystone.conf token expiration` ; NEXTRENEW=0 ; while true ; do CUR=`date +%%s` ; if [ $CUR -lt $NEXTRENEW ] ; then sleep 60 ; continue ; fi ; echo "Renewing gnocchi openstack token..." ; TOKEN=`openstack token issue | awk '"'"'/ id / { print $4 }'"'"'` ; if [ -n "$TOKEN" ] ; then echo "update data_source set json_data='"'"'{\\"mode\\":\\"token\\",\\"token\\":\\"$TOKEN\\"}'"'"',updated=datetime(\\"now\\") where name=\\"gnocchi\\";" | sqlite3 /var/lib/grafana/grafana.db ; if [ $? -eq 0 ]; then CUR=`date +%%s` ; NEXTRENEW=`expr $CUR + $TOKEXP - $SLOP` ; echo "Renewed gnocchi openstack token; next renew $NEXTRENEW" ; else echo "ERROR: could not renew token!" ; fi ; sleep 60 ; fi ; done'
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -4082,21 +4067,18 @@ if [ $OSVERSION -ge $OSNEWTON -a -z "${DESIGNATE_DBPASS}" ]; then
     fi
     cat <<EOF >/etc/bind/named.conf.options
 include "/etc/designate/rndc.key";
-
 options {
     directory "/var/cache/bind";
     $fstr
     dnssec-validation auto;
     auth-nxdomain no;    # conform to RFC1035
     listen-on-v6 { any; };
-
     allow-new-zones yes;
     request-ixfr no;
     listen-on port 53 { 127.0.0.1; ${MGMTIP}; };
     recursion yes;
     allow-query { 127.0.0.1; ${MGMTIP}/${MGMTPREFIX}; };
 };
-
 controls {
   inet 127.0.0.1 port 953
     allow { 127.0.0.1; } keys { "designate"; };
@@ -4187,28 +4169,23 @@ EOF
   # creation and the only way will to change it will be to delete it
   # (and all zones associated with it) and recreate it.
   description: Default Pool
-
   attributes: {}
-
   # List out the NS records for zones hosted within this pool
   # This should be a record that is created outside of designate, that
   # points to the public IP of the controller node.
   ns_records:
     - hostname: ns1-1.example.org.
       priority: 1
-
   # List out the nameservers for this pool. These are the actual BIND servers.
   # We use these to verify changes have propagated to all nameservers.
   nameservers:
     - host: 127.0.0.1
       port: 53
-
   # List out the targets for this pool. For BIND there will be one
   # entry for each BIND server, as we have to run rndc command on each server
   targets:
     - type: bind9
       description: BIND9 Server 1
-
       # List out the designate-mdns servers from which BIND servers should
       # request zone transfers (AXFRs) from.
       # This should be the IP of the controller node.
@@ -4217,7 +4194,6 @@ EOF
       masters:
         - host: 127.0.0.1
           port: 5354
-
       # BIND Configuration options
       options:
         host: 127.0.0.1
@@ -4313,14 +4289,12 @@ After=network.target network-online.target local-fs.target
 Wants=network.target
 Before=rabbitmq-server.service
 Requires=rabbitmq-server.service
-
 [Service]
 Type=simple
 RemainAfterExit=no
 ExecStart=$OURDIR/openstack-slothd.py
 StandardOutput=journal+console
 StandardError=journal+console
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -4334,24 +4308,17 @@ else
 # openstack-slothd - Cloudlab OpenStack Resource Usage Collector
 #
 # openstack-slothd collects OpenStack resource usage statistics
-
 description     "Cloudlab OpenStack slothd"
-
 start on runlevel [2345]
 stop on runlevel [!2345]
-
 respawn
 respawn limit 10 5
 umask 022
-
 expect stop
-
 console none
-
 pre-start script
     test -x /root/setup/openstack-slothd.py || { stop; exit 0; }
 end script
-
 exec /root/setup/openstack-slothd.py &
 EOF
 
@@ -4452,6 +4419,12 @@ echo "running codes to setup interface ports with fixed IP addresses"
 network_id=`openstack network show -f shell flat-lan-1-net | grep "^id=" | cut -d'"' -f 2`
 subnet_id=`openstack network show -f shell flat-lan-1-net | grep "^subnets=" | cut -d'"' -f 2`
 
+
+# See https://docs.openstack.org/project-install-guide/baremetal/draft/configure-glance-images.html
+wget -O /tmp/setup/OL7.vmdk https://clemson.box.com/shared/static/n7il9l5i96lthjzj5pmqq4lwkmaajs2z.vmdk
+glance image-create --name OL7 --disk-format vmdk --visibility public --container-format bare < /tmp/setup/OL7.vmdk
+rm /tmp/setup/OL7.vmdk
+
 # See https://docs.openstack.org/python-openstackclient/pike/cli/command-objects/port.html
 # Head node
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.21 testport1
@@ -4463,15 +4436,6 @@ openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.25 testport5
 openstack port create --network ${network_id} --fixed-ip subnet=${subnet_id},ip-address=10.11.10.26 testport6
 
-#Send notification of download
-echo "Your OpenStack instance is downloading image ." \
-    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
-
-# See https://docs.openstack.org/project-install-guide/baremetal/draft/configure-glance-images.html
-wget -O /tmp/setup/OL7.vmdk https://clemson.box.com/shared/static/n7il9l5i96lthjzj5pmqq4lwkmaajs2z.vmdk
-glance image-create --name OL7 --disk-format vmdk --visibility public --container-format bare < /tmp/setup/OL7.vmdk
-rm /tmp/setup/OL7.vmdk
-
 
 project_id=`openstack project list -f value | grep admin | cut -d' ' -f 1`
 flavor_id=`openstack flavor list -f value | grep m1.medium | cut -d' ' -f 1`
@@ -4480,14 +4444,11 @@ security_id=`openstack security group list -f value | grep $project_id | cut -d'
 
 
 port_id=`openstack port list -f value | grep testport1 | cut -d' ' -f 1`
+
 # See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
 openstack server create --flavor m1.medium --security-group $security_id --image OL7 --nic port-id=$port_id headnode
 #Delete Image after setup to free space
 glance image-delete --name OL7
-
-#Send notification of download
-echo "Your OpenStack instance is downloading image ." \
-    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
 
 #Download Compute Image
 wget -O /tmp/setup/OL7Compute.vmdk https://clemson.box.com/shared/static/bivyg2j8nxod1eflj0e45q51gig71mv4.vmdk
@@ -4497,21 +4458,15 @@ image_id=`openstack image list -f value | grep OL7Compute | cut -d' ' -f 1`
 
 
 port_id=`openstack port list -f value | grep testport2 | cut -d' ' -f 1`
-# See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
 openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute1
 
 port_id=`openstack port list -f value | grep testport3 | cut -d' ' -f 1`
-# See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
 openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute2
 
 port_id=`openstack port list -f value | grep testport4 | cut -d' ' -f 1`
-# See https://docs.openstack.org/mitaka/install-guide-ubuntu/launch-instance-selfservice.html
 openstack server create --flavor m1.medium --security-group $security_id --image ComputeOL7 --nic port-id=$port_id compute3
-glance image-delete --name OL7Compute
 
-#Send notification of download
-echo "Your OpenStack instance is downloading image ." \
-    |  mail -s "OpenStack Instance update" ${SWAPPER_EMAIL}
+glance image-delete --name OL7Compute
 
 #Download Storage Image
 wget -O /tmp/setup/OL7Storage.vmdk https://clemson.box.com/shared/static/xyz2h7g3ttg01j4ns8ey5t6h0spmfwkw.vmdk 
